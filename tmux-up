@@ -38,15 +38,17 @@ then
   exit 0
 fi
 
-CONF_DIR=$HOME/.tmux
+CONF_DIR=.tmux
 CONF=${1:-.tmux.conf}
 
-# try default configuration directory
+# try local configuration directory
 [ ! -f "$CONF" ] && CONF="$CONF_DIR/$CONF"
+# try default configuration directory
+[ ! -f "$CONF" ] && CONF="$HOME/$CONF"
 
 if [ ! -f "$CONF" ]
 then
-  echo "$0: cannot stat ‘${CONF}’: No such file"
+  echo "$0: cannot stat ‘$(basename $CONF)’: No such file"
   exit 1
 fi
 
@@ -56,7 +58,7 @@ NAME=$(basename "$CONF" .conf)
 if [ "$NAME" = 'tmux' ] || [ "$NAME" = '.tmux' ]
 then
   SESSION=$BASE
-elif [ ! -f "${NAME}.conf" ]
+elif test "$CONF" == "${HOME}/${CONF_DIR}/${NAME}.conf"
 then
   SESSION=$NAME
 else
