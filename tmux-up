@@ -3,8 +3,18 @@
 TMUX_UP=tmux-up
 VERSION=0.5.0
 
-if [ $# -ne 1 ] && [ ! -f '.tmux.conf' ]
+CONF_DIR=.tmux
+
+if [ $# -eq 1 ]
 then
+  CONF="$1"
+elif [ -f '.tmux.conf' ]
+then
+  CONF='.tmux.conf'
+elif [ -f "${CONF_DIR}/tmux.conf" ]
+then
+  CONF="${CONF_DIR}/tmux.conf"
+else
   echo "$0: missing file operand"
   echo "Try '$0 --help' for more information."
   exit 1
@@ -37,9 +47,6 @@ then
 	EOF
   exit 0
 fi
-
-CONF_DIR=.tmux
-CONF=${1:-.tmux.conf}
 
 # try local configuration directory
 [ ! -f "$CONF" ] && CONF="$CONF_DIR/$CONF"
